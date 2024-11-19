@@ -1,0 +1,38 @@
+{
+  "name": "nawy",
+  "version": "1.0.0",
+  "description": "backend code for Nawy fullstack SWE task",
+  "main": "server.ts",
+  "scripts": {
+    "start": "tsc && node dist/server.js",
+    "dev": "nodemon src/server.ts",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "nawy",
+    "property-listing",
+    "real-estate",
+    "property-navigator",
+    "property-explorer"
+  ],
+  "author": "MohamedRaafat <mo7amedraafat@aol.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.1",
+    "@typescript-eslint/eslint-plugin": "^8.15.0",
+    "@typescript-eslint/parser": "^8.15.0",
+    "eslint": "^9.15.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "express": "^4.21.1",
+    "helmet": "^8.0.0"
+  }
+}
