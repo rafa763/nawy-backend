@@ -1,0 +1,36 @@
+GET http://localhost:8080/api/v1/property?page=1&size=2
+
+###
+
+GET http://localhost:8080/api/v1/property/cm3tgcjmc0003ye
+
+###
+
+POST http://localhost:8080/api/v1/property
+Content-Type: application/json
+
+{
+  "name": "Tulip Othman",
+  "description": "A lovely apartment with a great view.",
+  "price": 110,
+  "rooms": 3,
+  "size": 120,
+  "address": {
+    "street": "221B Baker Street",
+    "city": "London",
+    "zip": "NW1 6XE",
+    "country": "United Kingdom"
+  },
+    "imageUrl": "https://example.com/image.jpg",
+    "developer": {
+        "name": "Sherlock Holmes",
+        "description": "The world's only consulting detective."
+    },
+    "project": {
+        "name": "Baker Street Apartments"
+    }
+}
+
+###
+
+GET http://localhost:8080/api/v1/property/search?query=othman
