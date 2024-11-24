@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { PropertyService } from '../service/property.service';
+import ValidationError from '../error/validation.error';
 
 export class PropertyController {
   private propertyService: PropertyService;
@@ -30,7 +31,7 @@ export class PropertyController {
     try {
       const { page, size } = req.query;
       const pageNumber = page ? parseInt(page as string, 10) : 1;
-      const sizeNumber = size ? parseInt(size as string, 10) : 10;
+      const sizeNumber = Math.min(size ? parseInt(size as string, 10) : 10, 20);
       const data = await this.propertyService.getProperties(
         pageNumber,
         sizeNumber,
@@ -66,57 +67,49 @@ export class PropertyController {
         description,
         price,
         rooms,
+        floor,
         size,
-        address,
-        developer,
-        project,
+        street,
+        city,
+        zip,
+        country,
+        developerName,
+        developerDescription,
+        projectName,
       } = req.body;
-      const data = await this.propertyService.createProperty({
-        name,
-        description,
-        price,
-        rooms,
-        size,
-        address,
-        developer,
-        project,
-      });
+
+      const image = req.file?.buffer;
+
+      if (!image) {
+        throw new ValidationError('Image is required');
+      }
+
+      const data = await this.propertyService.createProperty(
+        {
+          name,
+          description,
+          price: parseFloat(price),
+          rooms: parseInt(rooms, 10),
+          size: parseFloat(size),
+          imageUrl: null,
+          floor: floor ? parseInt(floor, 10) : null,
+          address: {
+            street,
+            city,
+            zip,
+            country,
+          },
+          developer: {
+            name: developerName,
+            description: developerDescription,
+          },
+          project: {
+            name: projectName,
+          },
+        },
+        image,
+      );
       res.status(201).json(data);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  public updateProperty: RequestHandler = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
-    try {
-      const { id, name, description, price, rooms, size, address } = req.body;
-      const data = await this.propertyService.updateProperty(id, {
-        name,
-        description,
-        price,
-        rooms,
-        size,
-        address,
-      });
-      res.status(200).json(data);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  public deleteProperty: RequestHandler = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
-    try {
-      const { id } = req.body;
-      const data = await this.propertyService.deleteProperty(id);
-      res.status(200).json(data);
     } catch (error) {
       next(error);
     }

@@ -6,7 +6,5 @@ export interface IAddress {
   city: string;
   zip: string;
   country: string;
-  createdAt: Date;
-  updatedAt: Date;
   properties?: IProperty[];
 }

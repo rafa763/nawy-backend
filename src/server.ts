@@ -12,7 +12,6 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 app.use('/api', router);
-// use global error handler
 app.use(globalErrorHandler);
 
 app.set('trust proxy', true);

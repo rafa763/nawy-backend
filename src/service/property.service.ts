@@ -1,10 +1,15 @@
 import NotFoundError from '../error/notFound.error';
 import ValidationError from '../error/validation.error';
-import { IPropertyModel } from '../interface/propertyModel.interface';
+import {
+  IProperty,
+  IPropertyModel,
+} from '../middleware/propertyModel.interface';
+import { IPropertyService } from '../interface/propertyService.interface';
 import { Property } from '../model/property.model';
 import { AIValidator } from '../utils/ai';
+import { uploadFile } from '../utils/s3';
 
-export class PropertyService {
+export class PropertyService implements IPropertyService {
   private propertyModel: IPropertyModel;
 
   constructor() {
@@ -29,22 +34,13 @@ export class PropertyService {
     return data;
   }
 
-  async createProperty(property: any) {
+  async createProperty(property: IProperty, image: Buffer) {
     const valid = await new AIValidator().verifyUserInput(property);
     if (!valid) {
       throw new ValidationError('Invalid input (Offensive language or spam)');
     }
+    property.imageUrl = await uploadFile(image);
     const ans = await this.propertyModel.save(property);
-    return ans;
-  }
-
-  async updateProperty(id: string, property: any) {
-    const ans = await this.propertyModel.update(id, property);
-    return ans;
-  }
-
-  async deleteProperty(id: string) {
-    const ans = await this.propertyModel.delete(id);
     return ans;
   }
 }

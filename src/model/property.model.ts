@@ -1,18 +1,41 @@
 import db from '../repo/db';
-import { IPropertyModel } from '../interface/propertyModel.interface';
+import { IPropertyModel } from '../middleware/propertyModel.interface';
 
 export class Property implements IPropertyModel {
   async getAll(page: number = 1, size: number = 10) {
-    const properties = await db.property.findMany({
-      skip: (page - 1) * size,
-      take: size,
-    });
-    return properties;
+    const [properties, total] = await Promise.all([
+      db.property.findMany({
+        skip: (page - 1) * size,
+        take: size,
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          price: true,
+          rooms: true,
+          size: true,
+          imageUrl: true,
+        },
+      }),
+      db.property.count(),
+    ]);
+
+    return {
+      data: properties,
+      total,
+      page,
+      size,
+    };
   }
 
   async get(id: string) {
     const property = await db.property.findUnique({
       where: { id },
+      include: {
+        address: true,
+        developer: true,
+        project: true,
+      },
     });
     return property;
   }
@@ -66,23 +89,6 @@ export class Property implements IPropertyModel {
     return res;
   }
 
-  async update(id: string, property: any) {
-    const res = await db.property.update({
-      where: { id },
-      data: {
-        ...property,
-      },
-    });
-    return res;
-  }
-
-  async delete(id: string) {
-    const res = await db.property.delete({
-      where: { id },
-    });
-    return res;
-  }
-
   async searchProperties(query: string) {
     const properties = await db.property.findMany({
       where: {
@@ -124,6 +130,15 @@ export class Property implements IPropertyModel {
             },
           },
         ],
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        price: true,
+        rooms: true,
+        size: true,
+        imageUrl: true,
       },
     });
     return properties;

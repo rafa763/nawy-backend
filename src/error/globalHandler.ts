@@ -16,6 +16,7 @@ const globalErrorHandler: ErrorRequestHandler = (
       errorType: error.errorType,
       errors: error.serializeErrors(),
     });
+    return;
   }
 
   // Handle unexpected errors

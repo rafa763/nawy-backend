@@ -1,9 +1,7 @@
 import { IProperty } from './property.interface';
 
 export interface IProject {
-  id: string;
+  id: string | null;
   name: string;
-  createdAt: Date;
-  updatedAt: Date;
   properties?: IProperty[];
 }
