@@ -5,6 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "start": "tsc && node dist/server.js",
+    "build": "tsc",
     "dev": "nodemon src/server.ts",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write ."
